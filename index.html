@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zumbo Travel</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #loading-container {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 1%;
+            height: 20px;
+            background: red;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.2s ease-in-out;
+        }
+        #orderComplete {
+            display: none;
+            margin-top: 20px;
+            font-size: 20px;
+            color: green;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <h1>Seleziona il tuo biglietto</h1>
+    <select id="departure">
+        <option value="///">Seleziona l'andata</option>
+        <option value="///">Pordenone</option>
+    </select>
+    <select id="destination">
+        <option value="///">Seleziona il ritorno</option>
+        <option value="portogallo">Portogallo</option>
+    </select>
+    <button id="buyButton" disabled>Acquista il biglietto</button>
+    <div id="loading-container">
+        <div id="progress-bar">1%</div>
+    </div>
+    <div id="orderComplete">
+        <h2>Ordine Completato!</h2>
+    </div>
+</div>
+
+<script>
+    const buyButton = document.getElementById('buyButton');
+    const departure = document.getElementById('departure');
+    const destination = document.getElementById('destination');
+
+    function checkSelection() {
+        if (departure.value && destination.value) {
+            buyButton.disabled = false;
+        }
+    }
+
+    departure.addEventListener('change', checkSelection);
+    destination.addEventListener('change', checkSelection);
+
+    buyButton.addEventListener('click', function() {
+        document.getElementById('loading-container').style.display = 'block';
+        document.getElementById('mainContainer').style.pointerEvents = 'none';
+        
+        let progress = 1;
+        let interval = setInterval(function() {
+            if (progress >= 100) {
+                clearInterval(interval);
+                document.getElementById('loading-container').style.display = 'none';
+                document.getElementById('orderComplete').style.display = 'block';
+            } else {
+                progress++;
+                document.getElementById('progress-bar').style.width = progress + '%';
+                document.getElementById('progress-bar').innerText = progress + '%';
+            }
+        }, 30);
+    });
+</script>
+
+</body>
+</html>

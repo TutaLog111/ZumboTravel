@@ -12,114 +12,89 @@
             height: 100vh;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
+            margin: 0;
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 100px;
+        }
+        #loading-bar {
+            width: 80%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        #progress {
+            width: 1%;
+            height: 20px;
+            background: green;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
         }
         .container {
+            display: none;
             text-align: center;
             background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        #loading-container {
-            display: none;
-            margin-top: 20px;
-            width: 100%;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        #progress-bar {
-            width: 1%;
-            height: 20px;
-            background: red;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-            font-weight: bold;
-            transition: width 0.2s ease-in-out;
-        }
-        #orderComplete {
-            display: none;
-            margin-top: 20px;
-            font-size: 20px;
-            color: green;
-        }
-        button {
-            padding: 12px 25px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        button:hover {
-            background-color: #0056b3;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-        }
-        select {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
     </style>
 </head>
 <body>
 
-<div class="container" id="mainContainer">
-    <h1>Seleziona il tuo biglietto</h1>
-    <select id="departure">
-        <option value="///">Seleziona l'andata</option>
-        <option value="///">Pordenone</option>
-    </select>
-    <select id="destination">
-        <option value="///">Seleziona il ritorno</option>
-        <option value="portogallo">Portogallo</option>
-    </select>
-    <button id="buyButton" disabled>Acquista il biglietto</button>
-    <div id="loading-container">
-        <div id="progress-bar">1%</div>
-    </div>
-    <div id="orderComplete">
-        <h2>Ordine Completato!</h2>
+<div class="loading-screen" id="loadingScreen">
+    <img src="logo.png" alt="Logo" class="logo"> <!-- Sostituisci con il tuo logo -->
+    <div id="loading-bar">
+        <div id="progress">1%</div>
     </div>
 </div>
 
+<div class="container" id="mainContainer">
+    <h1>Select your ticket</h1>
+    <select id="departure">
+        <option value="">Select the outward journey</option>
+        <option value="pordenone">Pordenone</option>
+    </select>
+    <select id="destination">
+        <option value="">Select return</option>
+        <option value="portogallo">Portogallo</option>
+    </select>
+    <button id="buyButton" disabled>Complete the Order</button>
+</div>
+
 <script>
-    const buyButton = document.getElementById('buyButton');
-    const departure = document.getElementById('departure');
-    const destination = document.getElementById('destination');
-
-    function checkSelection() {
-        if (departure.value && destination.value) {
-            buyButton.disabled = false;
+    let progress = 1;
+    let loadingInterval = setInterval(function() {
+        if (progress >= 100) {
+            clearInterval(loadingInterval);
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+        } else {
+            progress++;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('progress').innerText = progress + '%';
         }
-    }
-
-    departure.addEventListener('change', checkSelection);
-    destination.addEventListener('change', checkSelection);
-
-    buyButton.addEventListener('click', function() {
-        document.getElementById('loading-container').style.display = 'block';
-        document.getElementById('mainContainer').style.pointerEvents = 'none';
-        
-        let progress = 1;
-        let interval = setInterval(function() {
-            if (progress >= 100) {
-                clearInterval(interval);
-                document.getElementById('loading-container').style.display = 'none';
-                document.getElementById('orderComplete').style.display = 'block';
-            } else {
-                progress++;
-                document.getElementById('progress-bar').style.width = progress + '%';
-                document.getElementById('progress-bar').innerText = progress + '%';
-            }
-        }, 30);
-    });
+    }, 30);
 </script>
 
 </body>
